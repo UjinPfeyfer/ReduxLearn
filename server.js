@@ -7,11 +7,17 @@ var port = 3001
 var compiler = webpack(config)
 app.use(webpackDevMiddleware(compiler, { noInfo: true, publicPath: config.output.publicPath }))
 app.use(webpackHotMiddleware(compiler))
-app.use(function(req, res) {
-      res.header('Access-Control-Allow-Origin', '*');
+app.use(function(req, res, next) {
+      var allowedOrigins = '*';
+      var origin = req.headers.origin;
+      if(allowedOrigins.indexOf(origin) > -1){
+           res.setHeader('Access-Control-Allow-Origin', origin);
+      }
+      //res.header('Access-Control-Allow-Origin', 'http://127.0.0.1:8020');
       res.header('Access-Control-Allow-Methods', 'GET, OPTIONS');
       res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-      res.header('Access-Control-Allow-Credentials', true)
+      res.header('Access-Control-Allow-Credentials', true);
+      return next();
     });
 app.get("/", function(req, res) {
     res.sendFile(__dirname + '/index.html')
