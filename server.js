@@ -10,6 +10,15 @@ app.use(webpackHotMiddleware(compiler))
 app.get("/", function(req, res) {
     res.sendFile(__dirname + '/index.html')
 })
+var allowCrossDomain = function(req, res, next) {
+    res.header('Access-Control-Allow-Origin', "*");
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+    res.header('Access-Control-Allow-Headers', 'Content-Type');
+};
+
+app.configure(function() {
+    app.use(allowCrossDomain);
+});
 app.listen(process.env.PORT||port, function(error) {
     if (error) {
         console.error(error)
